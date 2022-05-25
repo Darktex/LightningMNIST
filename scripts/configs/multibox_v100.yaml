@@ -1,0 +1,19 @@
+trainingInput:
+  scaleTier: CUSTOM
+  masterType: n1-standard-32
+  workerType: n1-standard-32
+  workerCount: 1
+  masterConfig:
+    diskConfig:
+      bootDiskType: pd-ssd
+      bootDiskSizeGb: 50
+    acceleratorConfig:
+      count: 4
+      type: NVIDIA_TESLA_V100
+  workerConfig:
+    diskConfig:
+      bootDiskType: pd-ssd
+      bootDiskSizeGb: 50
+    acceleratorConfig:
+      count: 4
+      type: NVIDIA_TESLA_V100

@@ -1,0 +1,10 @@
+trainingInput:
+  scaleTier: CUSTOM
+  masterType: n1-standard-16
+  masterConfig:
+    diskConfig:
+      bootDiskType: pd-ssd
+      bootDiskSizeGb: 50
+    acceleratorConfig:
+      count: 4
+      type: NVIDIA_TESLA_T4
