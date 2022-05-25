@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from turtle import forward
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from pytorch_lightning import LightningModule
 from torchmetrics import Accuracy
+from torchvision.models import resnet18
 
 # Credit to the PyTorch Team
 # Taken from https://github.com/pytorch/examples/blob/master/mnist/main.py and slightly adapted.
@@ -25,7 +28,7 @@ from torchmetrics import Accuracy
 class Net(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv1 = nn.Conv2d(3, 32, 3, 1)
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout(0.25)
         self.dropout2 = nn.Dropout(0.5)
@@ -48,11 +51,27 @@ class Net(nn.Module):
         return output
 
 
+class CifarResnet(nn.Module):
+    def __init__(self, n_classes=100):
+        super().__init__()
+        resnet_modules = list(resnet18(pretrained=True).children())
+
+        self.backbone = nn.Sequential(*resnet_modules[:-3]).eval()
+        self.head = nn.Sequential(
+            *resnet_modules[-3:-1], nn.Flatten(), nn.Linear(512, n_classes)
+        ).train()
+
+    def forward(self, x):
+        x = self.backbone(x)
+        x = self.head(x)
+        return x
+
+
 class ImageClassifier(LightningModule):
     def __init__(self, model, lr=1.0, gamma=0.7, batch_size=32):
         super().__init__()
         self.save_hyperparameters(ignore="model")
-        self.model = model or Net()
+        self.model = model or CifarResnet()
         self.test_acc = Accuracy()
 
     def forward(self, x):

@@ -14,11 +14,13 @@
 """Simple MNIST image classifier example with LightningModule and LightningDataModule.
 To run: python train.py --trainer.max_epochs=50
 """
+import os
 
+from pytorch_lightning.plugins.environments import ClusterEnvironment
 from pytorch_lightning.utilities.cli import LightningCLI
 
+from lightningmnist.cifar100_datamodule import Cifar100DataModule
 from lightningmnist.classifier import ImageClassifier
-from lightningmnist.mnist_datamodule import MNISTDataModule
 
 
 class MyLightningCLI(LightningCLI):
@@ -26,13 +28,25 @@ class MyLightningCLI(LightningCLI):
         parser.add_argument("--job-dir", default=".")
         parser.link_arguments("data.batch_size", "model.batch_size")
         parser.link_arguments("job_dir", "data.job_dir")
+        parser.link_arguments("job_dir", "trainer.default_root_dir")
 
 
 def cli_main():
+    # print(f"CLUSTER_SPEC: {os.environ['CLUSTER_SPEC']}")
+    # print(f"LOCAL_RANK: {os.environ['LOCAL_RANK']}")
+    # print(f"NODE_RANK: {os.environ['NODE_RANK']}")
+    # print(f"RANK: {os.environ['RANK']}")
+    # print(f"WORLD_SIZE: {os.environ['WORLD_SIZE']}")
+    # print(f"MASTER_ADDR: {os.environ['MASTER_ADDR']}")
+    # print(f"MASTER_PORT: {os.environ['MASTER_PORT']}")
+
+    # os.environ["NODE_RANK"] = os.environ["RANK"]
+    # print(f"NODE_RANK: {os.environ['NODE_RANK']}")
+
     # The LightningCLI removes all the boilerplate associated with arguments parsing. This is purely optional.
     cli = MyLightningCLI(
         ImageClassifier,
-        MNISTDataModule,
+        Cifar100DataModule,
         seed_everything_default=42,
         save_config_overwrite=True,
         run=False,

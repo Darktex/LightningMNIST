@@ -59,7 +59,7 @@ case $GPU_MODEL in
 esac
 
 
-echo "Submitting Legacy AI Platform PyTorch job with " ${GPU_MODEL} ${CONFIG}
+echo "Submitting Legacy AI Platform PyTorch job with" ${GPU_MODEL} ${CONFIG}
 
 
 # NUM_GPUS to use (per machine)
@@ -85,7 +85,7 @@ gcloud ai-platform jobs submit training ${JOB_NAME} \
     --config ${CONFIG} \
     --job-dir ${JOB_DIR} \
     -- \
-    --trainer.max_epochs=3 \
+    --trainer.max_epochs=100 \
     --trainer.accelerator="gpu" \
     --trainer.num_nodes=${NUM_NODES} \
     --trainer.devices=${NUM_GPUS} \
