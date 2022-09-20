@@ -1,9 +1,9 @@
 #!/bin/bash
 ## Let's do some admin work to find out the variables to be used here
-SCRIPT=`basename ${BASH_SOURCE[0]}`
-SCRIPTS_DIR=`dirname $0`
-BOLD='\e[1;31m'      # Bold Red
-REV='\e[1;32m'       # Bold Green
+SCRIPT=$(basename ${BASH_SOURCE[0]})
+SCRIPTS_DIR=$(dirname $0)
+BOLD='\e[1;31m' # Bold Red
+REV='\e[1;32m'  # Bold Green
 
 #Help function
 function HELP {
@@ -26,41 +26,39 @@ echo "flags = $*"
 
 while getopts :d:g:r:h FLAG; do
   case $FLAG in
-    d)
-      DISTRIBUTED=$OPTARG
-      MULTIBOX_PREFIX='multibox_'
-      NUM_NODES=2
-      ;;  
-    g)
-      GPU_MODEL=$OPTARG
-      ;;
-    r)
-      REGION=$OPTARG
-      ;;
-    h)
-      HELP
-      ;;
-    *)
-        echo "UNIMPLEMENTED OPTION -- ${OPTKEY}" >&2
-        exit 1
-        ;;
+  d)
+    DISTRIBUTED=$OPTARG
+    MULTIBOX_PREFIX='multibox_'
+    NUM_NODES=2
+    ;;
+  g)
+    GPU_MODEL=$OPTARG
+    ;;
+  r)
+    REGION=$OPTARG
+    ;;
+  h)
+    HELP
+    ;;
+  *)
+    echo "UNIMPLEMENTED OPTION -- ${OPTKEY}" >&2
+    exit 1
+    ;;
   esac
 done
-shift $(expr $OPTIND - 1 )
+shift $(expr $OPTIND - 1)
 OTHERARGS=$@
 
 case $GPU_MODEL in
-    T4)
-      CONFIG=${SCRIPTS_DIR}/configs/${MULTIBOX_PREFIX}t4.yaml
-      ;;
-    V100)
-      CONFIG=${SCRIPTS_DIR}/configs/${MULTIBOX_PREFIX}v100.yaml
-      ;;
+T4)
+  CONFIG=${SCRIPTS_DIR}/configs/${MULTIBOX_PREFIX}t4.yaml
+  ;;
+V100)
+  CONFIG=${SCRIPTS_DIR}/configs/${MULTIBOX_PREFIX}v100.yaml
+  ;;
 esac
 
-
 echo "Submitting Legacy AI Platform PyTorch job with" ${GPU_MODEL} ${CONFIG}
-
 
 # NUM_GPUS to use (per machine)
 NUM_GPUS=4
@@ -70,7 +68,7 @@ NUM_WORKERS=4
 BUCKET_NAME=spotlight-perception-models
 
 # Build this using the Dockerfile and the provided script
-IMAGE_URI=gcr.io/context-ml/lightningmnist:caip
+IMAGE_URI=gcr.io/context-ml/lightningmnist:ai_platform
 
 # JOB_NAME: the name of your job running on AI Platform.
 JOB_NAME=lightningmnist_${NUM_NODES}_nodes_x${NUM_GPUS}x${GPU_MODEL}_DDP_$(date +%Y%m%d_%H%M%S)
@@ -80,16 +78,16 @@ echo "Monitor job here: https://console.cloud.google.com/ai-platform/jobs/${JOB_
 JOB_DIR=gs://${BUCKET_NAME}/experiments/${JOB_NAME}/
 
 gcloud ai-platform jobs submit training ${JOB_NAME} \
-    --region ${REGION} \
-    --master-image-uri ${IMAGE_URI} \
-    --config ${CONFIG} \
-    --job-dir ${JOB_DIR} \
-    -- \
-    --trainer.max_epochs=100 \
-    --trainer.accelerator="gpu" \
-    --trainer.num_nodes=${NUM_NODES} \
-    --trainer.devices=${NUM_GPUS} \
-    --trainer.strategy="ddp_find_unused_parameters_false"
+  --region ${REGION} \
+  --master-image-uri ${IMAGE_URI} \
+  --config ${CONFIG} \
+  --job-dir ${JOB_DIR} \
+  -- \
+  --trainer.max_epochs=100 \
+  --trainer.accelerator="gpu" \
+  --trainer.num_nodes=${NUM_NODES} \
+  --trainer.devices=${NUM_GPUS} \
+  --trainer.strategy="ddp_find_unused_parameters_false"
 
 # Stream the logs from the job
 gcloud ai-platform jobs stream-logs ${JOB_NAME}
