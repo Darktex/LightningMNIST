@@ -93,4 +93,4 @@ gcloud beta ai custom-jobs create \
   --enable-web-access \
   --worker-pool-spec=replica-count=1,machine-type=${GCP_MACHINE},accelerator-type=${GCP_GPU_MODEL_NAME},accelerator-count=${NUM_GPUS},container-image-uri=${IMAGE_URI} \
   ${WORKER_SPEC_FLAG} \
-  --args="--job-dir=${JOB_DIR}","--trainer.max_epochs=100","--trainer.accelerator='gpu'","--trainer.num_nodes=${NUM_NODES}","--trainer.devices=${NUM_GPUS}","--trainer.strategy='ddp_find_unused_parameters_false'"
+  --args="--job-dir=${JOB_DIR}","--trainer.max_epochs=100","--trainer.accelerator=gpu","--trainer.num_nodes=${NUM_NODES}","--trainer.devices=${NUM_GPUS}","--trainer.strategy=ddp_find_unused_parameters_false"

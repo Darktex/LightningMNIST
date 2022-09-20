@@ -37,6 +37,9 @@ def cli_main():
     if 'RANK' in os.environ:
         print(f"RANK: {os.environ['RANK']}")
 
+    if 'LOCAL_RANK' in os.environ:
+        print(f"LOCAL_RANK: {os.environ['LOCAL_RANK']}")
+
     if 'WORLD_SIZE' in os.environ:
         print(f"WORLD_SIZE: {os.environ['WORLD_SIZE']}")
 
