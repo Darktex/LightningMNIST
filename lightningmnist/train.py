@@ -16,11 +16,10 @@ To run: python train.py --trainer.max_epochs=50
 """
 import os
 
-from pytorch_lightning.plugins.environments import ClusterEnvironment
-from pytorch_lightning.utilities.cli import LightningCLI
-
 from lightningmnist.cifar100_datamodule import Cifar100DataModule
 from lightningmnist.classifier import ImageClassifier
+from pytorch_lightning.plugins.environments import ClusterEnvironment
+from pytorch_lightning.utilities.cli import LightningCLI
 
 
 class MyLightningCLI(LightningCLI):
@@ -32,16 +31,11 @@ class MyLightningCLI(LightningCLI):
 
 
 def cli_main():
-    # print(f"CLUSTER_SPEC: {os.environ['CLUSTER_SPEC']}")
-    # print(f"LOCAL_RANK: {os.environ['LOCAL_RANK']}")
-    # print(f"NODE_RANK: {os.environ['NODE_RANK']}")
-    # print(f"RANK: {os.environ['RANK']}")
-    # print(f"WORLD_SIZE: {os.environ['WORLD_SIZE']}")
-    # print(f"MASTER_ADDR: {os.environ['MASTER_ADDR']}")
-    # print(f"MASTER_PORT: {os.environ['MASTER_PORT']}")
-
-    # os.environ["NODE_RANK"] = os.environ["RANK"]
-    # print(f"NODE_RANK: {os.environ['NODE_RANK']}")
+    print(f"CLUSTER_SPEC: {os.environ['CLUSTER_SPEC']}")
+    print(f"RANK: {os.environ['RANK']}")
+    print(f"WORLD_SIZE: {os.environ['WORLD_SIZE']}")
+    print(f"MASTER_ADDR: {os.environ['MASTER_ADDR']}")
+    print(f"MASTER_PORT: {os.environ['MASTER_PORT']}")
 
     # The LightningCLI removes all the boilerplate associated with arguments parsing. This is purely optional.
     cli = MyLightningCLI(

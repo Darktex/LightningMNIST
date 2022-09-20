@@ -1,2 +1,3 @@
 pytorch-lightning==1.6.3
 jsonargparse[signatures]==4.7.3
+torchmetrics

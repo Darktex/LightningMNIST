@@ -1,8 +1,4 @@
-# Legacy CAIP image
 FROM gcr.io/cloud-ml-public/training/pytorch-gpu.1-11
-
-# Vertex image
-# FROM us-docker.pkg.dev/vertex-ai/training/pytorch-gpu.1-11:latest
 
 # Create a working directory
 RUN mkdir /app

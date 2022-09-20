@@ -54,7 +54,7 @@ class Net(nn.Module):
 class CifarResnet(nn.Module):
     def __init__(self, n_classes=100):
         super().__init__()
-        resnet_modules = list(resnet18(pretrained=True).children())
+        resnet_modules = list(resnet18(pretrained=False).children())
 
         self.backbone = nn.Sequential(*resnet_modules[:-3]).eval()
         self.head = nn.Sequential(
