@@ -31,11 +31,20 @@ class MyLightningCLI(LightningCLI):
 
 
 def cli_main():
-    print(f"CLUSTER_SPEC: {os.environ['CLUSTER_SPEC']}")
-    print(f"RANK: {os.environ['RANK']}")
-    print(f"WORLD_SIZE: {os.environ['WORLD_SIZE']}")
-    print(f"MASTER_ADDR: {os.environ['MASTER_ADDR']}")
-    print(f"MASTER_PORT: {os.environ['MASTER_PORT']}")
+    if 'CLUSTER_SPEC' in os.environ:
+        print(f"CLUSTER_SPEC: {os.environ['CLUSTER_SPEC']}")
+
+    if 'RANK' in os.environ:
+        print(f"RANK: {os.environ['RANK']}")
+
+    if 'WORLD_SIZE' in os.environ:
+        print(f"WORLD_SIZE: {os.environ['WORLD_SIZE']}")
+
+    if 'MASTER_ADDR' in os.environ:
+        print(f"MASTER_ADDR: {os.environ['MASTER_ADDR']}")
+
+    if 'MASTER_PORT' in os.environ:
+        print(f"MASTER_PORT: {os.environ['MASTER_PORT']}")
 
     # The LightningCLI removes all the boilerplate associated with arguments parsing. This is purely optional.
     cli = MyLightningCLI(
